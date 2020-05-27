@@ -8,6 +8,7 @@ import (
 
 func TestEcho(t *testing.T) {
 	go startServer(cfg{port: "8080"})
+	time.Sleep(5 * time.Second)
 	dialer := net.Dialer{Timeout: 1 * time.Minute}
 	conn, err := dialer.Dial("tcp", ":8080")
 	if err != nil {
