@@ -8,17 +8,13 @@ import (
 
 func TestEcho(t *testing.T) {
 	go startServer(cfg{port: "8080"})
-	var conn net.Conn
-	var err error
-	for i := 0; i < 3; i++ {
-		conn, err = net.Dial("tcp", ":8080")
-		if err != nil && i == 2 {
-			t.Fatal(err)
-		} else {
-			time.Sleep(1 * time.Second)
-		}
+	dialer := net.Dialer{Timeout: 1 * time.Minute}
+	conn, err := dialer.Dial("tcp", ":8080")
+	if err != nil {
+		t.Fatal(err)
 	}
 	defer conn.Close()
+
 	req := "hello world"
 	_, err = conn.Write([]byte(req))
 	if err != nil {
